@@ -31,9 +31,10 @@ int world_map[MAP_H][MAP_W] = {
 
 void draw_centered_line(const int height_sb, const int cli_x, const DVec2 map_box) {
     int offset = (CLI_H - height_sb) / 2;
+    int start = limit(offset, 0, CLI_H), end = limit(CLI_H - offset, 0, CLI_H);
     char symbol = textures[world_map[map_box.x][map_box.y]];
 
-    for (int i = offset; i < CLI_H - offset; i++) {
+    for (int i = start; i < end; i++) {
         mvaddch(i, cli_x, symbol);
     }
 }

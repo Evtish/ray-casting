@@ -2,6 +2,7 @@
 
 #include <ncurses.h>
 
+#include "calc.h"
 #include "vec2.h"
 
 #define MAP_W 24
