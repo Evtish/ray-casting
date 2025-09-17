@@ -19,7 +19,7 @@ int main(void) {
     DVec2 ray_map_box, step_dir;
     double screen_pos_x, perp_wall_dist;
     HitSide hit_wall_side_type;
-    int line_height_sb; // in symbols of CLI
+    int line_height; // in symbols of CLI
 
     while (true) {
         for (int i = 0; i <= CLI_W; i++) {
@@ -59,8 +59,9 @@ int main(void) {
             else
                 continue;
             
-            line_height_sb = 5 * CLI_H / perp_wall_dist;
-            draw_centered_line(line_height_sb, i, ray_map_box);
+            line_height = 5 * CLI_H / perp_wall_dist;
+            char color = draw_get_color(ray_map_box);
+            draw_centered_line(line_height, i, color);
 
         }
         refresh();

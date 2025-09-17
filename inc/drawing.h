@@ -12,7 +12,7 @@
 // #define FONT_W 8//11
 // #define FONT_H 15//27
 
-// extern char textures[];
 extern int world_map[MAP_H][MAP_W];
 
-void draw_centered_line(const int height_sb, const int cli_x, const DVec2 map_box);
+char draw_get_color(const DVec2 map_box);
+void draw_centered_line(const int height_sb, const int cli_x, char color);
