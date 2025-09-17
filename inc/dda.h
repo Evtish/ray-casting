@@ -3,11 +3,12 @@
 #include <stdbool.h>
 
 #include "vec2.h"
-#include "draw.h"
+#include "drawing.h"
 
 typedef enum {
     VERTICAL,
-    HORIZONTAL
+    HORIZONTAL,
+    NONE
 } HitSide;
 
 double dda_side_dist_component(

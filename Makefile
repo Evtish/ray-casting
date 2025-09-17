@@ -5,7 +5,7 @@ INC_DIR := inc
 BUILD_DIR := build
 
 CC := gcc
-CC_FLAGS := -lm -Wall -Os -I ./$(INC_DIR)
+CC_FLAGS := -std=c99 -Wall -Os -I ./$(INC_DIR) -lm -lncurses
 
 SOURCE_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJECT_FILES := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCE_FILES))

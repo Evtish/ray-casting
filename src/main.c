@@ -1,23 +1,29 @@
+#include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
 
 #include "calc.h"
 #include "vec2.h"
 #include "dda.h"
-#include "draw.h"
+#include "drawing.h"
 
 int main(void) {
+    setlocale(LC_ALL, "");
+
+    initscr();
+
     Vec2 player_pos = {11.0, 11.0};
-    Vec2 player_dir = {0.0, 1.0};
-    Vec2 camera_plane = {0.66, 0.0};
+    Vec2 player_dir = {0.0, -1.0};
+    Vec2 camera_plane = {1.0, -1.0};
     Vec2 ray_dir, delta_dist, side_dist;
     DVec2 ray_map_box, step_dir;
     double screen_pos_x, perp_wall_dist;
     HitSide hit_wall_side_type;
+    int line_height_sb; // in symbols of CLI
 
-    // while (true) {
-        for (int i = 0; i <= MAP_W; i++) {
-            screen_pos_x = fmap(i, 0, MAP_W, -1.0, 1.0);
+    while (true) {
+        for (int i = 0; i <= CLI_W; i++) {
+            screen_pos_x = fmap(i, 0, CLI_W, -1.0, 1.0);
             ray_dir = vec2_add(player_dir, vec2_scalar_mult_n(camera_plane, screen_pos_x));
 
             // MAYBE ADD step_dir ONE TIME RIGHT NOW
@@ -50,8 +56,17 @@ int main(void) {
                 perp_wall_dist = side_dist.x - delta_dist.x;
             else if (hit_wall_side_type == HORIZONTAL)
                 perp_wall_dist = side_dist.y - delta_dist.y;
+            else
+                continue;
+            
+            line_height_sb = 5 * CLI_H / perp_wall_dist;
+            draw_centered_line(line_height_sb, i, ray_map_box);
+
         }
-    // }
+        refresh();
+    }
     
+    endwin();
+
     return 0;
 }

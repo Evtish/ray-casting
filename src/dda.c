@@ -19,9 +19,13 @@ HitSide dda_hit_wall_side(
     DVec2 *const p_ray_map_box,
     DVec2 *const p_step_dir
 ) {
-    HitSide side_type;
-    while (true)
-    {
+    HitSide side_type = NONE;
+    while (
+        p_ray_map_box->x + p_step_dir->x >= 0 &&
+        p_ray_map_box->x + p_step_dir->x <= MAP_W &&
+        p_ray_map_box->y + p_step_dir->y >= 0 &&
+        p_ray_map_box->y + p_step_dir->y <= MAP_H
+    ) {
         // jump to the nearest map square side
         if (p_side_dist->x < p_side_dist->y) {
             p_side_dist->x += p_delta_dist->x;
@@ -37,4 +41,5 @@ HitSide dda_hit_wall_side(
         if (world_map[p_ray_map_box->x][p_ray_map_box->y] > 0)
             return side_type;
     }
+    return side_type;
 }
