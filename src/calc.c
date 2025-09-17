@@ -1,5 +1,7 @@
 #include "calc.h"
 
+#define FLOATING_POINT_APPROX_ZERO 0.00001
+
 // limit var to a range low -- high
 int limit(const int val, const int low, const int high) {
     if (val > high)
@@ -38,4 +40,12 @@ double fmap(const double var, const double low1, const double high1, const doubl
     res = low2 + (var - low1) * (d2 / d1);
     
     return flimit(res, low2, high2);
+}
+
+// prevent zero division
+double prevent_zero_div(const double a, const double b, const double default_val) {
+    if (fabs(b) < FLOATING_POINT_APPROX_ZERO)
+        return default_val;
+    else
+        return a / b;
 }

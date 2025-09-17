@@ -3,19 +3,20 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "calc.h"
+
 typedef struct {
     double x;
     double y;
-} vec2;
+} Vec2;
 
 typedef struct {
     int x;
     int y;
-} d_vec2;
+} DVec2;
 
-double vec2_len(const vec2 u);
-d_vec2 vec2_normalize(const vec2 u);
-vec2 vec2_add(const vec2 u, const vec2 v);
-vec2 vec2_sub(const vec2 u, const vec2 v);
-vec2 vec2_scalarMult_n(const vec2 u, const double n);
-vec2 vec2_scalarMult_vec2(const vec2 u, const vec2 v);
+double vec2_len(const Vec2 u);
+DVec2 vec2_normalize(const Vec2 u);
+Vec2 vec2_add(const Vec2 u, const Vec2 v);
+Vec2 vec2_sub(const Vec2 u, const Vec2 v);
+Vec2 vec2_scalar_mult_n(const Vec2 u, const double n);
