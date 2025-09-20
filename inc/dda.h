@@ -3,7 +3,8 @@
 #include <stdbool.h>
 
 #include "vec2.h"
-#include "drawing.h"
+// #include "calc.h"
+#include "drawer.h"
 
 typedef enum {
     VERTICAL,
@@ -23,4 +24,13 @@ HitSide dda_hit_wall_side(
     Vec2 *const p_delta_dist,
     DVec2 *const p_ray_map_box,
     DVec2 *const p_step_dir
+);
+
+double dda_measure_wall_dist(
+    const HitSide hit_wall_side,
+    const bool euclidian,
+    const Vec2 side_dist,
+    const Vec2 delta_dist,
+    const Vec2 player_dir,
+    const Vec2 ray_dir
 );

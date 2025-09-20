@@ -43,3 +43,25 @@ HitSide dda_hit_wall_side(
     }
     return side_type;
 }
+
+double dda_measure_wall_dist(
+    const HitSide hit_wall_side,
+    const bool euclidian,
+    const Vec2 side_dist,
+    const Vec2 delta_dist,
+    const Vec2 player_dir,
+    const Vec2 ray_dir
+) {
+    double wall_dist = 0.0;
+
+    if (hit_wall_side == VERTICAL)
+        wall_dist = side_dist.x - delta_dist.x;
+    else if (hit_wall_side == HORIZONTAL)
+        wall_dist = side_dist.y - delta_dist.y;
+    
+    if (euclidian)
+        // wall_dist = prevent_zero_div(wall_dist, vec2_len(player_dir), ALMOST_INF) * vec2_len(ray_dir);
+        wall_dist /= vec2_len(player_dir) * vec2_len(ray_dir);
+
+    return wall_dist;
+}

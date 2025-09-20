@@ -5,21 +5,27 @@
 #include "calc.h"
 #include "vec2.h"
 #include "dda.h"
-#include "drawing.h"
+#include "drawer.h"
 
 int main(void) {
     setlocale(LC_ALL, "");
 
     initscr();
+    cbreak();
+    noecho();
+    intrflush(stdscr, false);
+    keypad(stdscr, true);
 
     Vec2 player_pos = {11.0, 11.0};
-    Vec2 player_dir = {0.0, -1.0};
-    Vec2 camera_plane = {1.0, -1.0};
+    Vec2 player_dir = {0.0, 1.0};
+    Vec2 camera_plane = {1.0, 0.0};
     Vec2 ray_dir, delta_dist, side_dist;
     DVec2 ray_map_box, step_dir;
-    double screen_pos_x, perp_wall_dist;
-    HitSide hit_wall_side_type;
+    bool use_euclidian_dist = false;
+    double screen_pos_x, wall_dist;
+    HitSide hit_wall_side;
     int line_height; // in symbols of CLI
+    char wall_color;
 
     while (true) {
         for (int i = 0; i <= CLI_W; i++) {
@@ -49,20 +55,17 @@ int main(void) {
             // printf("step_dir.x = %d, step_dir.y = %d\n", step_dir.x, step_dir.y);
             
             // DDA algorythm
-            hit_wall_side_type = dda_hit_wall_side(&side_dist, &delta_dist, &ray_map_box, &step_dir);
-            // printf("hit_wall_side_type = %d (0 - VERTICAL, 1 - HORIZONTAL)\n", hit_wall_side_type);
+            hit_wall_side = dda_hit_wall_side(&side_dist, &delta_dist, &ray_map_box, &step_dir);
+            // printf("hit_wall_side = %d (0 - VERTICAL, 1 - HORIZONTAL)\n", hit_wall_side);
 
-            if (hit_wall_side_type == VERTICAL)
-                perp_wall_dist = side_dist.x - delta_dist.x;
-            else if (hit_wall_side_type == HORIZONTAL)
-                perp_wall_dist = side_dist.y - delta_dist.y;
+            if (hit_wall_side != NONE)
+                wall_dist = dda_measure_wall_dist(hit_wall_side, use_euclidian_dist, side_dist, delta_dist, player_dir, ray_dir);
             else
                 continue;
             
-            line_height = 5 * CLI_H / perp_wall_dist;
-            char color = draw_get_color(ray_map_box);
-            draw_centered_line(line_height, i, color);
-
+            wall_color = drawer_get_color(ray_map_box);
+            line_height = drawer_get_line_height(wall_dist);
+            drawer_centered_line(line_height, i, wall_color);
         }
         refresh();
     }

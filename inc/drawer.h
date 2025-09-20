@@ -14,5 +14,6 @@
 
 extern int world_map[MAP_H][MAP_W];
 
-char draw_get_color(const DVec2 map_box);
-void draw_centered_line(const int height_sb, const int cli_x, char color);
+char drawer_get_color(const DVec2 map_box);
+int drawer_get_line_height(const double wall_dist);
+void drawer_centered_line(const int height_sb, const int cli_x, char color);

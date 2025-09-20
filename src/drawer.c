@@ -1,4 +1,6 @@
-#include "drawing.h"
+#include "drawer.h"
+
+#define H_SCALING_RATIO 2.0
 
 char colors[] = {' ', ',', ':', 'o', '@', '#'};
 
@@ -29,12 +31,16 @@ int world_map[MAP_H][MAP_W] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-char draw_get_color(const DVec2 map_box) {
+char drawer_get_color(const DVec2 map_box) {
     int color_number = world_map[map_box.x][map_box.y];
     return colors[color_number];
 }
 
-void draw_centered_line(const int height_sb, const int cli_x, char color) {
+int drawer_get_line_height(const double wall_dist) {
+    return H_SCALING_RATIO * CLI_H / wall_dist;
+}
+
+void drawer_centered_line(const int height_sb, const int cli_x, char color) {
     int offset = (CLI_H - height_sb) / 2;
     int start = limit(offset, 0, CLI_H), end = limit(CLI_H - offset, 0, CLI_H);
 
