@@ -1,5 +1,7 @@
 #include "dda.h"
 
+bool use_euclidian_dist = false;
+
 // get intersection *distance* based on current player coordinate
 double dda_side_dist_component(
     const double ray_dir_coord,
@@ -46,7 +48,6 @@ HitSide dda_hit_wall_side(
 
 double dda_measure_wall_dist(
     const HitSide hit_wall_side,
-    const bool euclidian,
     const Vec2 side_dist,
     const Vec2 delta_dist,
     const Vec2 player_dir,
@@ -59,7 +60,7 @@ double dda_measure_wall_dist(
     else if (hit_wall_side == HORIZONTAL)
         wall_dist = side_dist.y - delta_dist.y;
     
-    if (euclidian)
+    if (use_euclidian_dist)
         // wall_dist = prevent_zero_div(wall_dist, vec2_len(player_dir), ALMOST_INF) * vec2_len(ray_dir);
         wall_dist /= vec2_len(player_dir) * vec2_len(ray_dir);
 

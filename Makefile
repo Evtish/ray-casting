@@ -4,7 +4,7 @@ SRC_DIR := src
 INC_DIR := inc
 BUILD_DIR := build
 
-CC := gcc
+CC := cc
 CC_FLAGS := -std=c99 -Wall -Os -I ./$(INC_DIR) -lm -lncurses
 
 SOURCE_FILES := $(wildcard $(SRC_DIR)/*.c)

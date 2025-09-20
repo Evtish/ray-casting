@@ -1,6 +1,6 @@
 #include "drawer.h"
 
-#define H_SCALING_RATIO 2.0
+#define H_SCALING_RATIO 1.0
 
 char colors[] = {' ', ',', ':', 'o', '@', '#'};
 
@@ -40,7 +40,7 @@ int drawer_get_line_height(const double wall_dist) {
     return H_SCALING_RATIO * CLI_H / wall_dist;
 }
 
-void drawer_centered_line(const int height_sb, const int cli_x, char color) {
+void drawer_draw_centered_line(const int height_sb, const int cli_x, char color) {
     int offset = (CLI_H - height_sb) / 2;
     int start = limit(offset, 0, CLI_H), end = limit(CLI_H - offset, 0, CLI_H);
 
