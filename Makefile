@@ -14,11 +14,11 @@ EXEC_FILE := $(BUILD_DIR)/$(PROGRAM_NAME)
 
 all: $(EXEC_FILE)
 
-# create the build directory
+# create a build directory
 $(BUILD_DIR):
 	mkdir -pv $(BUILD_DIR)
 
-# check if build directory exists
+# check if the build directory exists
 $(OBJECT_FILES): | $(BUILD_DIR)
 
 # compile
@@ -31,7 +31,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 $(EXEC_FILE): $(OBJECT_FILES)
 	$(CC) $^ $(CC_FLAGS) -o $@
 
-# run executable
+# run an executable
 run:
 	./$(EXEC_FILE)
 
