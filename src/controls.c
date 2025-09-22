@@ -28,25 +28,7 @@
 
 void controls_all(Vec2 *const p_pos, Vec2 *const p_dir, Vec2 *const p_camera_plane) {
     Vec2 delta_pos;
-    DVec2 new_map_box;
-
-    // [cos    sin]
-    // [-sin   cos]
-    // Mat22 rotation_matrix = {
-    //     (Vec2) {
-    //         cos(TURN_STEP),
-    //         -1 * sin(TURN_STEP)
-    //     },
-    //     (Vec2) {
-    //         sin(TURN_STEP),
-    //         cos(TURN_STEP)
-    //     }
-    // };
-
-    // double rotation_matrix[2][2] = {
-    //     {cos(TURN_STEP), sin(TURN_STEP)},
-    //     {-1 * sin(TURN_STEP), cos(TURN_STEP)}
-    // };
+    // DVec2 new_map_box;
 
     switch (getch()) {
         //fisheye
@@ -95,15 +77,5 @@ void controls_all(Vec2 *const p_pos, Vec2 *const p_dir, Vec2 *const p_camera_pla
     }
 
     *p_pos = vec2_limit(*p_pos, (Vec2) {0, 0}, (Vec2) {MAP_W, MAP_H});
-    // new_map_box = (DVec2) {p_pos->x, p_pos->y};
-    // if (world_map[new_map_box.x][new_map_box.y] != 0) {
-    //     if (step_dir.y == 1)
-    //         p_pos->y = new_map_box.y - WALK_DELTA;
-    //     else if (step_dir.y == -1)
-    //         p_pos->y = new_map_box.y + 1 + WALK_DELTA;
-    //     else if (step_dir.x == 1)
-    //         p_pos->x = new_map_box.x - WALK_DELTA;
-    //     else if (step_dir.x == -1)
-    //         p_pos->x = new_map_box.x + 1 + WALK_DELTA;
-    // }
+    // CREATE A COLLISION CHECK!!!
 }
