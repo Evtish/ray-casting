@@ -4,7 +4,7 @@
 
 #include "linear_algebra.h"
 // #include "calc.h"
-#include "drawer.h"
+#include "map.h"
 
 extern bool use_euclidian_dist;
 

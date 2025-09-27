@@ -17,15 +17,20 @@ int main(void) {
     intrflush(stdscr, false);
     keypad(stdscr, true);
 
+    if (has_colors()) {
+        start_color();
+        set_color_pairs();
+    }
+
     Vec2 player_pos = {11.0, 11.0};
     Vec2 player_dir = {0.0, 1.0};
-    Vec2 camera_plane = {1.0, 0.0};
+    Vec2 camera_plane = {0.67, 0.0};
     Vec2 ray_dir, delta_dist, side_dist;
     DVec2 ray_map_box, step_dir;
     double screen_pos_x, wall_dist;
     HitSide hit_wall_side;
-    int line_height; // in symbols of CLI
-    char wall_color;
+    int line_height, wall_color_pair;
+    char wall_shape;
 
     while (true) {
         for (int i = 0; i <= CLI_W; i++) {
@@ -48,20 +53,24 @@ int main(void) {
             
             // DDA algorythm
             hit_wall_side = dda_hit_wall_side(&side_dist, &delta_dist, &ray_map_box, &step_dir);
-
             if (hit_wall_side != NONE)
                 wall_dist = dda_measure_wall_dist(hit_wall_side, side_dist, delta_dist, player_dir, ray_dir);
             else
                 continue;
             
-            wall_color = drawer_get_color(ray_map_box);
             line_height = drawer_get_line_height(wall_dist);
-            drawer_draw_centered_line(line_height, i, wall_color);
+            wall_shape = drawer_get_wall_shape(wall_dist, hit_wall_side);
+            wall_color_pair = drawer_get_wall_color_pair(ray_map_box);
+            drawer_draw_centered_line(line_height, i, wall_shape, wall_color_pair);
         }
         controls_all(&player_pos, &player_dir, &camera_plane);
 
         // int ch = getch();
-        // printw("key: %c, code: %d\n", ch, ch);
+        // switch (getch()) {
+        //     case KEY_UP:
+        //         printw("getmaxx: %d, getmaxy: %d\n", getmaxx(stdscr), getmaxy(stdscr));
+        //     break;
+        // }
 
         clear(); // FIX THIS!!!
         refresh();

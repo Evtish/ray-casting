@@ -20,6 +20,7 @@ typedef struct
 
 double vec2_len(const Vec2 u);
 DVec2 vec2_normalize(const Vec2 u);
+Vec2 dvec2_mult_n(const DVec2 u, const double n);
 Vec2 vec2_limit(const Vec2 u, const Vec2 min, const Vec2 max);
 Vec2 vec2_add(const Vec2 u, const Vec2 v);
 Vec2 vec2_sub(const Vec2 u, const Vec2 v);

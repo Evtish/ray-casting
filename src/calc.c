@@ -2,6 +2,10 @@
 
 #define FLOATING_POINT_APPROX_ZERO 0.00001
 
+double hypotenuse(const int a, const int b) {
+    return sqrt(a * a + b * b);
+}
+
 // limit var to a range low -- high
 int limit(const int val, const int low, const int high) {
     if (val > high)

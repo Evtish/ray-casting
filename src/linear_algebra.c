@@ -9,6 +9,8 @@ DVec2 vec2_normalize(const Vec2 u) {
     };
 }
 
+Vec2 dvec2_mult_n(const DVec2 u, const double n) { return (Vec2) {u.x * n, u.y * n}; }
+
 Vec2 vec2_limit(const Vec2 u, const Vec2 min, const Vec2 max) {
     return (Vec2) {
         flimit(u.x, min.x, max.x),

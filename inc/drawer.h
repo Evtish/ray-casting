@@ -3,17 +3,21 @@
 #include <ncurses.h>
 
 #include "calc.h"
+#include "dda.h"
 #include "linear_algebra.h"
 
-#define MAP_W 24
-#define MAP_H 24
-#define CLI_W 236
-#define CLI_H 64
+#define CLI_W getmaxx(stdscr) //173//236
+#define CLI_H getmaxy(stdscr) //41//64
 // #define FONT_W 8//11
 // #define FONT_H 15//27
 
-extern int world_map[MAP_H][MAP_W];
-
-char drawer_get_color(const DVec2 map_box);
+void set_color_pairs(void);
 int drawer_get_line_height(const double wall_dist);
-void drawer_draw_centered_line(const int height_sb, const int cli_x, char color);
+char drawer_get_wall_shape(const double dist, const HitSide hit_side);
+int drawer_get_wall_color_pair(const DVec2 map_box);
+void drawer_draw_centered_line(
+    const int height_sb,
+    const int cli_x,
+    const char shape,
+    const int color_pair
+);
