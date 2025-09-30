@@ -1,4 +1,3 @@
-#include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -9,18 +8,7 @@
 #include "controls.h"
 
 int main(void) {
-    setlocale(LC_ALL, "");
-
-    initscr();
-    cbreak();
-    noecho();
-    intrflush(stdscr, false);
-    keypad(stdscr, true);
-
-    if (has_colors()) {
-        start_color();
-        set_color_pairs();
-    }
+    graphics_init();
 
     Vec2 player_pos = {11.0, 11.0};
     Vec2 player_dir = {0.0, 1.0};
@@ -28,13 +16,21 @@ int main(void) {
     Vec2 ray_dir, delta_dist, side_dist;
     DVec2 ray_map_box, step_dir;
     double screen_pos_x, wall_dist;
-    HitSide hit_wall_side;
-    int line_height, wall_color_pair;
-    char wall_shape;
+    HitSide wall_side;
+    int line_height;
+    // int* wall_color;
+    #ifdef USE_SDL3
+        int wall_color[4];
+    #elif defined USE_NCURSES
+        char wall_shape;
+        int wall_color;
+    #endif
 
-    while (true) {
-        for (int i = 0; i <= CLI_W; i++) {
-            screen_pos_x = fmap(i, 0, CLI_W, -1, 1);
+    while (program_is_running) {
+        graphics_refresh();
+
+        for (int i = 0; i <= WINDOW_W; i++) {
+            screen_pos_x = fmap(i, 0, WINDOW_W, -1, 1);
             ray_dir = vec2_add(player_dir, vec2_mult_n(camera_plane, screen_pos_x));
 
             // MAYBE ADD step_dir ONE TIME RIGHT NOW
@@ -52,31 +48,31 @@ int main(void) {
             };
             
             // DDA algorythm
-            hit_wall_side = dda_hit_wall_side(&side_dist, &delta_dist, &ray_map_box, &step_dir);
-            if (hit_wall_side != NONE)
-                wall_dist = dda_measure_wall_dist(hit_wall_side, side_dist, delta_dist, player_dir, ray_dir);
+            wall_side = dda_hit_wall_side(&side_dist, &delta_dist, &ray_map_box, &step_dir);
+            if (wall_side != NONE)
+                wall_dist = dda_measure_wall_dist(wall_side, side_dist, delta_dist, player_dir, ray_dir);
             else
                 continue;
             
             line_height = drawer_get_line_height(wall_dist);
-            wall_shape = drawer_get_wall_shape(wall_dist, hit_wall_side);
-            wall_color_pair = drawer_get_wall_color_pair(ray_map_box);
-            drawer_draw_centered_line(line_height, i, wall_shape, wall_color_pair);
+            #ifdef USE_SDL3
+                drawer_get_color_rgba(wall_color, ray_map_box, wall_dist, wall_side);
+                drawer_draw_centered_line(line_height, i, wall_color);
+            #elif defined USE_NCURSES
+                wall_shape = drawer_get_wall_shape(wall_dist, wall_side);
+                wall_color = drawer_get_wall_color_pair(ray_map_box);
+                drawer_draw_centered_line(line_height, i, wall_shape, wall_color);
+            #endif
         }
-        controls_all(&player_pos, &player_dir, &camera_plane);
-
         // int ch = getch();
-        // switch (getch()) {
-        //     case KEY_UP:
-        //         printw("getmaxx: %d, getmaxy: %d\n", getmaxx(stdscr), getmaxy(stdscr));
-        //     break;
-        // }
+        // printw("%d\n", ch);
 
-        clear(); // FIX THIS!!!
-        refresh();
+        #ifdef USE_SDL3
+            sdl_check_events();
+        #endif
+        controls_all(&player_pos, &player_dir, &camera_plane);
     }
-    
-    endwin();
+    graphics_quit();
 
     return 0;
 }
