@@ -23,7 +23,7 @@
         const double dist,
         const HitSide hit_side
     ) {
-        int idx = world_map[map_box.x][map_box.y],
+        int idx = world_map[map_box.x][map_box.y] - 1,
         alpha = SDL_ALPHA_OPAQUE - fmap(dist, 0, MAX_DIST_THRESHOLD, 0, SDL_ALPHA_OPAQUE / 2 + 1); // the farther the darker
 
         if (hit_side == HORIZONTAL)

@@ -1,5 +1,8 @@
 # Compile the program
+### Using SDL3
 ```make```
+### Using ncurses
+```make UI=NCURSES```
 
 # Run the program
 ```make run```
