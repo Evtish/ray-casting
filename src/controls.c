@@ -81,7 +81,7 @@ void controls_all(Vec2 *const p_pos, Vec2 *const p_dir, Vec2 *const p_camera_pla
     normalized_left_dir = vec2_normalize(vec2_mult_matrix(*p_dir, ROTATION_MATRIX(3 * M_PI_2)));
 
     #ifdef USE_SDL3
-        if (key_states[SDL_SCANCODE_ESCAPE])
+        if (key_states[SDL_SCANCODE_Q])
             program_is_running = false;
         if (key_states[SDL_SCANCODE_F])
             use_euclidian_dist = !use_euclidian_dist;

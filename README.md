@@ -10,4 +10,6 @@
 Or just run the executable file. It's located in the `build` directory.
 
 # Controls
-The same as in Wolfenstein 3D.
+- Movement is the same as in Wolfenstein 3D
+- F - toggle the fisheye mode
+- Q - quit
