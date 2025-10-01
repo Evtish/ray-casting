@@ -7,7 +7,7 @@
 # Run the program
 ```make run```
 
-Or just run the executable file. It's located in the `build` directory.
+Or just run the executable file. It's located in the `build` directory (the directory will appear after compilation).
 
 # Controls
 - Movement is the same as in Wolfenstein 3D
