@@ -76,9 +76,11 @@ bool program_is_running = true;
 void controls_all(Vec2 *const p_pos, Vec2 *const p_dir, Vec2 *const p_camera_plane) {
     Vec2 new_pos = *p_pos;
     // DVec2 new_map_box,
-    DVec2 normalized_dir = vec2_normalize(*p_dir),
-    normalized_right_dir = vec2_normalize(vec2_mult_matrix(*p_dir, ROTATION_MATRIX(M_PI_2))),
-    normalized_left_dir = vec2_normalize(vec2_mult_matrix(*p_dir, ROTATION_MATRIX(3 * M_PI_2)));
+    DVec2 normalized_dir = vec2_normalize(*p_dir);
+    #if USE_NCURSES
+        DVec2 normalized_right_dir = vec2_normalize(vec2_mult_matrix(*p_dir, ROTATION_MATRIX(M_PI_2))),
+        normalized_left_dir = vec2_normalize(vec2_mult_matrix(*p_dir, ROTATION_MATRIX(3 * M_PI_2)));
+    #endif
 
     #ifdef USE_SDL3
         if (key_states[SDL_SCANCODE_Q])
