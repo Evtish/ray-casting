@@ -24,7 +24,7 @@
         const HitSide hit_side
     ) {
         int idx = world_map[map_box.x][map_box.y] - 1,
-        alpha = SDL_ALPHA_OPAQUE - fmap(dist, 0, MAX_DIST_THRESHOLD, 0, SDL_ALPHA_OPAQUE / 2 + 1); // the farther the darker
+        alpha = SDL_ALPHA_OPAQUE - fmap(dist, 0, MAX_DIST_THRESHOLD, 0, SDL_ALPHA_OPAQUE * 0.8); // the farther the darker
 
         if (hit_side == HORIZONTAL)
             alpha /= 1.2;
@@ -50,8 +50,7 @@
     }
     
 #elif defined USE_NCURSES
-    static char shapes[] = {'@', '%', '#', 'O', '&', 'a', 'o', ':', ','};
-    // char shapes[] = {'@', 'O'};
+    // static char shapes[] = {'@', '$', '%', '#', '&', '0', 'O', '?'};
 
     void drawer_set_color_pairs(void) {
         init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -62,10 +61,12 @@
     }
 
     char drawer_get_wall_shape(const double dist, const HitSide hit_side) {
+        char shapes[] = {'$', '%', '#', '&', '0', '?'};
         int amount_of_shapes = arr_len(shapes),
-        shape_index = fmap(dist, 0, MAX_DIST_THRESHOLD, 0, amount_of_shapes / 2 - 1);
+        side_shift = 1,
+        shape_index = fmap(dist, 0, MAX_DIST_THRESHOLD, 0, amount_of_shapes - side_shift - 1);
         if (hit_side == HORIZONTAL && shape_index < amount_of_shapes)
-            shape_index++;
+            shape_index += side_shift;
 
         // int shape_index = 0;
         // if (hit_side == VERTICAL)

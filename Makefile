@@ -44,7 +44,7 @@ $(EXEC_FILE): $(OBJECT_FILES)
 	$(CC) $^ $(CC_FLAGS) $(LD_FLAGS) -o $@
 
 # run an executable
-run:# $(EXEC_FILE)
+run: $(EXEC_FILE)
 	./$(EXEC_FILE)
 
 # remove build files

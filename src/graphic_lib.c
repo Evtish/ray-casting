@@ -8,7 +8,7 @@
 
 void graphics_init(void) {
     #ifdef USE_SDL3
-        SDL_SetAppMetadata("Ray Casting", "0.2", "ru.evtish.ray-casting");
+        SDL_SetAppMetadata("Ray Casting", "0.2", "Ray Casting");
 
         if (!SDL_Init(SDL_INIT_VIDEO)) {
             SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());

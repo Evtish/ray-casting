@@ -4,8 +4,11 @@
 ### Using ncurses
 ```make UI=NCURSES```
 
-# Run the program
+# Compile and run the program
+### Using SDL3
 ```make run```
+### Using ncurses
+```make UI=NCURSES run```
 
 Or just run the executable file. It's located in the `build` directory (the directory will appear after compilation).
 
