@@ -8,11 +8,11 @@ CC := cc
 CC_FLAGS := -MMD -MP -std=c99 -Wall -Wextra -O3 -I ./$(INC_DIR)# -save-temps=obj
 LD_FLAGS := -lm
 
-UI ?= SDL3
-ifeq ($(UI),SDL3)
+MODE ?= SDL3
+ifeq ($(MODE),SDL3)
 	CC_FLAGS += -DUSE_SDL3
 	LD_FLAGS += -lSDL3
-else ifeq ($(UI),NCURSES)
+else ifeq ($(MODE),NCURSES)
 	CC_FLAGS += -DUSE_NCURSES
 	LD_FLAGS += -lncurses
 endif
@@ -28,7 +28,7 @@ all: $(EXEC_FILE)
 
 # create a build directory
 $(BUILD_DIR):
-	mkdir -pv $(BUILD_DIR)
+	mkdir -pv $@
 
 # check if the build directory exists
 $(OBJECT_FILES): | $(BUILD_DIR)

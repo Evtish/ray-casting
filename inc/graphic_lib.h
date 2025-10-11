@@ -5,8 +5,8 @@
     #include <SDL3/SDL.h>
     #include <SDL3/SDL_main.h>
 
-    #define WINDOW_W 1280 //getmaxx(stdscr)
-    #define WINDOW_H 720 //getmaxy(stdscr)
+    #define WINDOW_W 1920
+    #define WINDOW_H 1080
 
     extern SDL_Window *sdl_window;
     extern SDL_Renderer *sdl_renderer;

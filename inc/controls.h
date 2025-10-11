@@ -1,7 +1,6 @@
 #pragma once
 
 #include <math.h>
-// #include <ncurses.h>
 
 #include "graphic_lib.h"
 #include "linear_algebra.h"
