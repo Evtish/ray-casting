@@ -1,6 +1,7 @@
 #include "calc.h"
 
 #define FLOATING_POINT_APPROX_ZERO 0.00001
+#define GAMMA_CORRECTION_DEGREE 0.45 // = 1/2.2
 
 double hypotenuse(const int a, const int b) {
     return sqrt(a * a + b * b);
@@ -52,4 +53,10 @@ double prevent_zero_div(const double a, const double b, const double default_val
         return default_val;
     else
         return a / b;
+}
+
+double correct_gamma(const double val) {
+    if (val > 0)
+        return pow(val, GAMMA_CORRECTION_DEGREE);
+    return 0;
 }

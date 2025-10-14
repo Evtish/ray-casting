@@ -1,9 +1,8 @@
-#include "graphic_lib.h"
+#include "graphics_lib.h"
 
 #ifdef USE_SDL3
     SDL_Window *sdl_window = NULL;
     SDL_Renderer *sdl_renderer = NULL;
-    SDL_Event sdl_event;
 
     void graphics_init(void) {
         SDL_SetAppMetadata("Ray Casting", "0.2", "Ray Casting");
@@ -33,16 +32,23 @@
     void graphics_init(void) {
         setlocale(LC_ALL, "");
 
-        // if (initscr() == NULL) {
-        //     printf("Couldn't initialize ncurses");
-        //     exit(1);
-        // }
-        initscr();
-        cbreak();
-        noecho();
-        curs_set(0);
-        intrflush(stdscr, false);
-        keypad(stdscr, true);
+        if (
+            initscr() == NULL ||
+            cbreak() == ERR ||
+            noecho() == ERR ||
+            curs_set(0) == ERR ||
+            intrflush(stdscr, false) == ERR ||
+            keypad(stdscr, true) == ERR
+        ) {
+            fprintf(stderr, "Couldn't initialize ncurses\n");
+            exit(1);
+        }
+        // initscr();
+        // cbreak();
+        // noecho();
+        // curs_set(0);
+        // intrflush(stdscr, false);
+        // keypad(stdscr, true);
 
         if (has_colors()) {
             start_color();

@@ -8,11 +8,11 @@ CC := cc
 CC_FLAGS := -MMD -MP -std=c99 -Wall -Wextra -O3 -I ./$(INC_DIR)# -save-temps=obj
 LD_FLAGS := -lm
 
-MODE ?= SDL3
-ifeq ($(MODE),SDL3)
+UI ?= SDL3
+ifeq ($(UI),SDL3)
 	CC_FLAGS += -DUSE_SDL3
 	LD_FLAGS += -lSDL3
-else ifeq ($(MODE),NCURSES)
+else ifeq ($(UI),NCURSES)
 	CC_FLAGS += -DUSE_NCURSES
 	LD_FLAGS += -lncurses
 endif

@@ -2,8 +2,7 @@
 
 #include <stdbool.h>
 
-#include "linear_algebra.h"
-// #include "calc.h"
+#include "vec2.h"
 #include "map.h"
 
 extern bool use_euclidian_dist;

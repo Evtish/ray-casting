@@ -61,7 +61,6 @@ double dda_measure_wall_dist(
         wall_dist = side_dist.y - delta_dist.y;
     
     if (use_euclidian_dist)
-        // wall_dist = prevent_zero_div(wall_dist, vec2_len(player_dir), ALMOST_INF) * vec2_len(ray_dir);
         wall_dist /= vec2_len(player_dir) * vec2_len(ray_dir);
 
     return wall_dist;

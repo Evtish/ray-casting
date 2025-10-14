@@ -10,7 +10,6 @@
 
     extern SDL_Window *sdl_window;
     extern SDL_Renderer *sdl_renderer;
-    extern SDL_Event sdl_event;
 #elif defined USE_NCURSES
     #include <locale.h>
     #include <ncurses.h>
