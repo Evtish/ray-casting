@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <stdio.h>
 
 #include "graphics_lib.h"
 #include "vec2.h"

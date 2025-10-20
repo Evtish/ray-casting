@@ -8,9 +8,15 @@
     #define M_PI_2 1.57079632679489661923 /* pi/2 */
 #endif
 
-#define FAST_MODE_RATIO 2
-#define UNIT_WALK_STEP 0.0001 // in map boxes
-#define UNIT_TURN_STEP M_PI / 300 // in radians
+#define FAST_MODE_K 2
+#ifdef USE_SDL3
+    #define WALK_SPEED 8 /* in map boxes per second */
+    #define TURN_SPEED M_PI /* in radians per second */
+#elif defined USE_NCURSES
+    // ncurses processes keyboard input several times slower than SDL3
+    #define WALK_SPEED (8 * 14)
+    #define TURN_SPEED (M_PI * 14)
+#endif
 // #define WALK_OFFSET 0.01 // in map boxes, a small step back when the player bump into a wall
 
 #ifdef USE_NCURSES
@@ -18,10 +24,6 @@
     #define KEY_ALT_LEFT 552
     #define KEY_SUP 337
     #define KEY_SDOWN 336
-    #define KEY_LOWERCASE_F 102
-    #define KEY_UPPERCASE_F 70
-    #define KEY_LOWERCASE_Q 113
-    #define KEY_UPPERCASE_Q 81
 #endif
 
 // [cos    sin]
@@ -82,13 +84,9 @@ void controls_all(
     Vec2 *const p_dir,
     Vec2 *const p_camera_plane
 ) {
-    // const Vec2 forward_dir = *p_dir,
-    //     backward_dir = vec2_mult_n(forward_dir, -1),
-    //     right_dir = vec2_mult_matrix(forward_dir, ROTATION_MATRIX(M_PI_2)),
-    //     left_dir = vec2_mult_n(right_dir, -1);
-    const Vec2 perp_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(-M_PI_2));
-    double walk_step = frame_time * UNIT_WALK_STEP, turn_step = frame_time * UNIT_TURN_STEP;
-    Vec2 pos_offset = {0, 0}, new_pos,
+    const Vec2 perp_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(M_PI_2));
+    double walk_step = frame_time * WALK_SPEED, turn_step = frame_time * TURN_SPEED;
+    Vec2 pos_offset = {0, 0},
         new_dir = *p_dir,
         new_camera_plane = *p_camera_plane;
 
@@ -103,9 +101,9 @@ void controls_all(
 
         // enable fast mode
         if (key_states[SDL_SCANCODE_LSHIFT] || key_states[SDL_SCANCODE_RSHIFT])
-            walk_step *= FAST_MODE_RATIO, turn_step *= FAST_MODE_RATIO;
+            walk_step *= FAST_MODE_K, turn_step *= FAST_MODE_K;
         else
-            walk_step = frame_time * UNIT_WALK_STEP, turn_step = frame_time * UNIT_TURN_STEP;
+            walk_step = frame_time * WALK_SPEED, turn_step = frame_time * TURN_SPEED;
         
         // walk
         if (key_states[SDL_SCANCODE_UP])
@@ -137,67 +135,50 @@ void controls_all(
     #elif defined USE_NCURSES
         switch (getch()) {
             // quit
-            case KEY_LOWERCASE_Q:
-            case KEY_UPPERCASE_Q:
-                program_is_running = false;
-                break;
+            case 'q':
+            case 'Q': program_is_running = false; break;
 
             // fisheye
-            case KEY_LOWERCASE_F:
-            case KEY_UPPERCASE_F:
-                use_euclidian_dist = !use_euclidian_dist;
-                break;
+            case 'f':
+            case 'F': use_euclidian_dist = !use_euclidian_dist; break;
 
             // walk
-            case KEY_UP:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(forward_dir, UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
-            case KEY_DOWN:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(forward_dir, -UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
-            case KEY_SUP:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(forward_dir, FAST_MODE_RATIO * UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
-            case KEY_SDOWN:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(forward_dir, -FAST_MODE_RATIO * UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
+            case KEY_UP: pos_offset = vec2_add(pos_offset, vec2_mult_n(*p_dir, walk_step)); break;
+            case KEY_DOWN: pos_offset = vec2_add(pos_offset, vec2_mult_n(*p_dir, -walk_step)); break;
+            case KEY_SUP: pos_offset = vec2_add(pos_offset, vec2_mult_n(*p_dir, walk_step * FAST_MODE_K)); break;
+            case KEY_SDOWN: pos_offset = vec2_add(pos_offset, vec2_mult_n(*p_dir, -walk_step * FAST_MODE_K)); break;
             
             // strafe
-            case KEY_ALT_RIGHT:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(right_dir, UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
-            case KEY_ALT_LEFT:
-                new_pos = vec2_add(*p_pos, vec2_mult_n(left_dir, UNIT_WALK_STEP));
-                // *p_pos = vec2_add(*p_pos, delta_pos);
-                break;
+            case KEY_ALT_RIGHT: pos_offset = vec2_add(pos_offset, vec2_mult_n(perp_dir, walk_step)); break;
+            case KEY_ALT_LEFT: pos_offset = vec2_add(pos_offset, vec2_mult_n(perp_dir, -walk_step)); break;
 
             // turn
             case KEY_RIGHT:
-                *p_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(UNIT_TURN_STEP));
-                *p_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(UNIT_TURN_STEP));
-                break;
+                new_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(turn_step));
+                new_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(turn_step));
+            break;
             case KEY_LEFT:
-                *p_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(-UNIT_TURN_STEP));
-                *p_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(-UNIT_TURN_STEP));
-                break;
+                new_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(-turn_step));
+                new_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(-turn_step));
+            break;
             case KEY_SRIGHT:
-                *p_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(2 * UNIT_TURN_STEP));
-                *p_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(FAST_MODE_RATIO * UNIT_TURN_STEP));
-                break;
+                new_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(turn_step * FAST_MODE_K));
+                new_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(turn_step * FAST_MODE_K));
+            break;
             case KEY_SLEFT:
-                *p_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(-2 * UNIT_TURN_STEP));
-                *p_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(-FAST_MODE_RATIO * UNIT_TURN_STEP));
-                break;
+                new_dir = vec2_mult_matrix(*p_dir, ROTATION_MATRIX(-turn_step * FAST_MODE_K));
+                new_camera_plane = vec2_mult_matrix(*p_camera_plane, ROTATION_MATRIX(-turn_step * FAST_MODE_K));
+            break;
         }
     #endif
     
-    new_pos = vec2_add(*p_pos, vec2_normalize(pos_offset));
-    *p_pos = vec2_limit(new_pos, (Vec2) {0, 0}, (Vec2) {MAP_W, MAP_H});
+    *p_pos = vec2_limit(
+        vec2_add(
+            *p_pos,
+            vec2_mult_n(vec2_normalize(pos_offset), walk_step)
+        ),
+        (Vec2) {0, 0}, (Vec2) {MAP_W, MAP_H}
+    );
     *p_dir = new_dir, *p_camera_plane = new_camera_plane;
     // CREATE A COLLISION CHECK!!!
 }

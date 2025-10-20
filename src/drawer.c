@@ -66,7 +66,7 @@
     }
     
 #elif defined USE_NCURSES
-    #define DESKTOP_ENV 0 // 0 - KDE Plasma, 1 - Gnome
+    #define DESKTOP_ENV 1 // 0 - KDE Plasma, 1 - Gnome
     #define SHAPE_SIDE_SHIFT 2
 
     void drawer_set_color_pairs(void) {
